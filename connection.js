@@ -9,9 +9,10 @@ var config = {
 
 const pool = new pg.Pool(config)
 
-const insert = (data) => {
-  const values = [data.name, data.comment];
-  pool.query('INSERT INTO names(name, comment) VALUES($1, $2) RETURNING *', values, (err, res) => {
+const insertMessage = (id, data) => {
+  var date = new Date();
+  const values = [id, data.message, date];
+  pool.query('INSERT INTO messages("USER_ID", "MESSAGE", "TIMESTAMP") VALUES($1, $2, $3) RETURNING *', values, (err, res) => {
     if (err) {
       console.log(err.stack)
     } else {
@@ -33,12 +34,12 @@ const addUser = (data) => {
 }
 
 
-const getUsers = (done) => {
+const getUsers = (req,res) => {
   pool.query('SELECT * FROM users ', (err, result) => {
     if (err) {
-      done(err);
-    }
-    done(null, result.rows)
+      throw err;
+    } 
+    res.status(200).json(result.rows);
   })
 }
 
@@ -61,4 +62,12 @@ const findById = (id, done) => {
   })
 }
 
-module.exports = { insert, addUser, getUsers, getUser, findById}
+const getMessages = (req, res) => {
+  pool.query('SELECT messages."ID", messages."MESSAGE", messages."TIMESTAMP", users."NAME" FROM messages FULL JOIN users on messages."USER_ID" = users."ID"', (err, result) => {
+    if (err) 
+      throw err;
+    res.status(200).send(result.rows);
+  })
+} 
+
+module.exports = { insertMessage, addUser, getUsers, getUser, findById, getMessages }

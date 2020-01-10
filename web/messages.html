@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>See Messages</title>
+</head>
+
+<body>
+    <div id="app">
+        <div class="column">
+            <message-component v-for="message in messages" :message="message" />
+        </div>
+    </div>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="vue.js"></script>
+</html>

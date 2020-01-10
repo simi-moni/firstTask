@@ -52,13 +52,13 @@ passport.deserializeUser(function(ID, done){
 // app.get('/', (req, res) => res.sendFile(path.join(__dirname + '/register.html')));
 
 app.post('/submit-form', function (req, res) {
-  db.insert(req.body);
-  res.status(201).end("success");
+  db.insertMessage(req.session.passport.user, req.body);
+  res.redirect("/messages.html");
 });
 
-app.get('/all', (req, res) => {
-  db.getUsers(req, res);
-});
+app.get('/all', db.getUsers);
+
+app.get('/messages', db.getMessages);
 
 app.get('/user', (req, res) => {
   res.send(">>> isAuthenticated: " + req.isAuthenticated() + " user: " + req.session.passport.user)
@@ -73,7 +73,7 @@ app.post("/login", passport.authenticate("local", {
   successRedirect: "/user",
   failureRedirect: "/login.html",
   failureFlash: false
-}))
+}));
 
 app.listen(port, () => {
   console.log('App running on port: ' + port);
