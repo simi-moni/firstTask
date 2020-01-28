@@ -70,7 +70,7 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/login", passport.authenticate("local", {
-  successRedirect: "/user",
+  successRedirect: "/messages.html",
   failureRedirect: "/login.html",
   failureFlash: false
 }));
